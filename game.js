@@ -98,7 +98,7 @@ scene("game", () => {
                     rect(100, 100),
                     pos(posX, posY),
                     color(255, 255, 255),
-                    opacity(0.5),
+                    opacity(0.0),
                     area(),
                     "cell",
                     { coord: [x, y], occupied: grid[y]?.[x] !== "" },
