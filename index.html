@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XVsO</title>
+  <style>
+    /* Style for the video background */
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1; /* Place the video behind everything */
+    }
+
+    canvas {
+      position: relative;
+      z-index: 1; /* Ensure the game canvas is above the video */
+    }
+  </style>
+</head>
+<body>
+  <!-- Background video -->
+  <video autoplay loop>
+    <source src="/Users/jonathangalarza/Documents/XVSO/xvso.m4a" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Game script -->
+  <script type="module" src="game.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+  const socket = io("http://localhost:3000"); // Update if hosted
+
+  let room = null;
+  let mySymbol = null;
+
+  socket.on("waiting", () => {
+    console.log("Waiting for opponent...");
+  });
+
+  socket.on("startGame", (data) => {
+    room = data.room;
+    mySymbol = data.symbol;
+    console.log(`Game started as ${mySymbol}`);
+  });
+
+  socket.on("opponentMove", ({ x, y, symbol }) => {
+    receiveMove(x, y, symbol); // We'll define this
+  });
+
+  function sendMove(x, y, symbol) {
+    if (room && mySymbol === symbol) {
+      socket.emit("makeMove", { room, x, y, symbol });
+    }
+  }
+</script>
+
+</body>
+</html>
